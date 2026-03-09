@@ -186,12 +186,12 @@ int main(int argc, char **argv) {
     // User-defined parameters
     const int k                 = 2;  // degree of velocity space
     const int n                 = 1;  // degree of time space
-    const int mesh_refinements  = 1;
+    const int mesh_refinements  = 2;
     
     // Mesh and time step 
     double h0 = 1./(std::sqrt(2)*2); // initial mesh size
     double h  = h0/8;
-    double dT = 0.05; //h/h0;
+    double dT = 0.005; //h/h0;
     
     const double cfl = um * dT / h; 
 
@@ -218,8 +218,8 @@ int main(int argc, char **argv) {
 
 
     // Data paths and containers
-    std::string path_output_data("./output_files/navier_stokes/" + problem_name + "/data/");
-    std::string path_output_figures("./output_files/navier_stokes/" + problem_name + "/paraview/");     
+    std::string path_output_data("../cpp/example/kexCode/output_files/" + problem_name + "/data/");
+    std::string path_output_figures("../cpp/example/kexCode/output_files/" + problem_name + "/paraview/");     
 
     if (MPIcf::IamMaster()) {
         std::filesystem::create_directories(path_output_data);
