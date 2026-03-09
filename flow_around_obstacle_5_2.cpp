@@ -218,8 +218,8 @@ int main(int argc, char **argv) {
 
 
     // Data paths and containers
-    std::string path_output_data("../output_files/navier_stokes/" + problem_name + "/data/");
-    std::string path_output_figures("../output_files/navier_stokes/" + problem_name + "/paraview/");     
+    std::string path_output_data("./output_files/navier_stokes/" + problem_name + "/data/");
+    std::string path_output_figures("./output_files/navier_stokes/" + problem_name + "/paraview/");     
 
     if (MPIcf::IamMaster()) {
         std::filesystem::create_directories(path_output_data);
