@@ -48,7 +48,7 @@ namespace ex1 {
     const double T = 15; // 40
     const double um = 1;
 
-    double radius = 0.1;
+    double radius = 0.05;
     double center_x = 0.2;
     double center_y = 0.2;
     double A = 0;
@@ -609,12 +609,12 @@ int main(int argc, char **argv) {
             auto drag_integrand = rho * nu * dutdn * normal_obst.expr(1) - ph.expr() * normal_obst.expr(0);
             auto lift_integrand = rho * nu * dutdn * normal_obst.expr(0) + ph.expr() * normal_obst.expr(1);
             double P[2] = {0, 0.41/2};
-            double u_bar = bc_fun(P,0,0);
+            double u_bar = bc_fun(P,0,0) * 2/3;
             std::cout << u_bar;
             double drag_force = integral_algoim(drag_integrand, *surface(last_quad_pt_time), 0, phi, In, q_time, last_quad_pt_time);
             double lift_force = -integral_algoim(lift_integrand, *surface(last_quad_pt_time), 0, phi, In, q_time, last_quad_pt_time);
-            drag_vector[iter] = 2*drag_force/(0.1*std::pow(2*u_bar/3,2));
-            lift_vector[iter] = 2*lift_force/(0.1*std::pow(2*u_bar/3,2));
+            drag_vector[iter] = 2*drag_force/(rho*(2*radius)*std::pow(u_bar,2));
+            lift_vector[iter] = 2*lift_force/(rho*(2*radius)*std::pow(u_bar,2));
             // Write solutions to Paraview in each time step if not performing a convergence study
             if (MPIcf::IamMaster() && (mesh_refinements == 1)) {
 
