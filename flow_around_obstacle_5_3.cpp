@@ -180,7 +180,7 @@ int main(int argc, char **argv) {
     
     // Mesh and time step 
     double h0 = 1./(std::sqrt(2)*2); // initial mesh size
-    double h  = h0/8; // testa 32
+    double h  = h0/32; // testa 32
     double dT = 0.1; //h/h0;
     
     const double cfl = um * dT / h; 
