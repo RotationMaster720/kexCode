@@ -52,7 +52,7 @@ namespace ex1 {
     double center_x = 0.2;
     double center_y = 0.2;
     double A = 0;
-    double omega = 1;
+    double omega = 0;
 
     double fun_levelset(double* P, int i, const double t) {
         const double x = P[0], y = P[1];
@@ -186,7 +186,7 @@ int main(int argc, char **argv) {
     // User-defined parameters
     const int k                 = 2;  // degree of velocity space
     const int n                 = 1;  // degree of time space
-    const int mesh_refinements  = 2;
+    const int mesh_refinements  = 1;
     
     // Mesh and time step 
     double h0 = 1./(std::sqrt(2)*2); // initial mesh size
@@ -616,7 +616,7 @@ int main(int argc, char **argv) {
             drag_vector[iter] = 2*drag_force/(rho*(2*radius)*std::pow(u_bar,2));
             lift_vector[iter] = 2*lift_force/(rho*(2*radius)*std::pow(u_bar,2));
             // Write solutions to Paraview in each time step if not performing a convergence study
-            if (MPIcf::IamMaster() && (mesh_refinements == 1)) {
+            if (MPIcf::IamMaster() && (mesh_refinements == 0)) {
 
                 // Paraview<mesh_t> background_writer(Th, path_output_figures + "Th" + std::to_string(iter) + ".vtk");
                 // background_writer.add(levelsets[0], "levelset_first", 0, 1);
