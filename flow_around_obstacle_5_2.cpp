@@ -186,11 +186,11 @@ int main(int argc, char **argv) {
     // User-defined parameters
     const int k                 = 2;  // degree of velocity space
     const int n                 = 1;  // degree of time space
-    const int mesh_refinements  = 1;
+    const int mesh_refinements  = 2;
     
     // Mesh and time step 
     double h0 = 1./(std::sqrt(2)*2); // initial mesh size
-    double h  = h0/8;
+    double h  = h0/16;
     double dT = 0.005; //h/h0;
     
     const double cfl = um * dT / h; 
