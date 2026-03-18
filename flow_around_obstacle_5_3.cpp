@@ -1,4 +1,4 @@
-/**
+/** 
  * @file flow_around_obstacle.cpp
  * @author Sebastian Myrbäck
  * @brief Solve the Navier-Stokes obstacle fictitious domain problem with the Taylor-Hood finite element pair
@@ -126,6 +126,27 @@ namespace ex1 {
         else
             return 0;
             //return -std::cos(x*M_PI)*std::sin(t)*std::sin(y*M_PI)*std::sin(y*M_PI)*std::sin(x*M_PI);
+    }
+
+    double uexact(double* P, int component, double t) {
+        double x = P[0];
+        double y = P[1];
+        if (component == 0)
+            return std::pow(height_domain/2,2) - std::pow(y,2);
+        else
+            return 0;
+    }
+
+    double uexact_d(double* P, int component, int domain, double t) {
+        return uexact(P, component, t);
+    }
+
+    double uexact_initial(double* P, int component) {
+        return uexact(P, component, 0);
+    }
+
+    double uexact_boundary(double* P, int component, double t) {
+        return uexact(P, component, t);
     }
 
     double pexact(double* P, int component, double t) {
@@ -328,6 +349,7 @@ int main(int argc, char **argv) {
             funtest_t xi_p(Nhp, 1), chi_p(Nhp, 1);
             
             // Interpolate exact functions
+            fct_t u_exact(V_interpolation, In_interpolation, uexact);
             fct_t bc(V_interpolation, In_interpolation, bc_fun);
             fct_t p_exact(P_interpolation, In_interpolation, pexact);
             fct_t body(V_interpolation, In_interpolation, surface_fun);
@@ -467,11 +489,11 @@ int main(int argc, char **argv) {
                     , In);
                 
                 // matches the term int_Omega p dx added in the bilinear form
-                navier_stokes.addLinear(
-                    - innerProduct(p_exact.expr(), chi_p)
-                    , active_mesh
-                    , In
-                );
+                //navier_stokes.addLinear(
+                //    - innerProduct(p_exact.expr(), chi_p)
+                //    , active_mesh
+                //    , In
+                //);
                 
                 
                 navier_stokes.addMatMul(data_all); // add matrix*solution to rhs
@@ -584,18 +606,18 @@ int main(int argc, char **argv) {
             auto uh_1dy = dy(uh_T.expr(1));
 
     
-            //double error_L2_uh  = L2_norm_cut(uh_T, uexact_d, In, q_time, last_quad_pt_time, phi, 0, 2, quadrature_order_space);
+            double error_L2_uh  = L2_norm_cut(uh_T, uexact_d, In, q_time, last_quad_pt_time, phi, 0, 2, quadrature_order_space);
             double error_L2_ph  = L2_norm_cut(ph_T, pexact_d, In, q_time, last_quad_pt_time, phi, 0, 1, quadrature_order_space);
             double error_div_uh = maxNormCut(uh_0dx + uh_1dy, active_mesh);
             // double error_H1_uh   = H1normCut(uh, uexact, current_time + dT, 0, 2);  //! TODO
 
-            //error_L2L2_uh += L2L2_norm(uh, uexact_d, active_mesh, In, q_time, phi, quadrature_order_space);
+            error_L2L2_uh += L2L2_norm(uh, uexact_d, active_mesh, In, q_time, phi, quadrature_order_space);
             error_L2L2_ph += L2L2_norm(ph, pexact_d, active_mesh, In, q_time, phi, quadrature_order_space);
             
             // int_ph = integral(active_mesh, ph_T.expr());
             // std::cout << " int_Omega ph = " << int_ph << " int_Omega p = " << int_p << '\n';
 
-            //fct_t u_error(Vh, uexact, current_time + dT);
+            fct_t u_error(Vh, uexact, current_time + dT);
             fct_t p_error(Ph, pexact, current_time + dT);
 
             std::transform(p_error.v.begin(), p_error.v.end(), ph_T.v.begin(), p_error.v.begin(), std::minus<double>()); 
@@ -648,7 +670,9 @@ int main(int argc, char **argv) {
                 paraview.add(levelsets[last_quad_pt_time], "levelset_last", 0, 1);
                 paraview.add(uh, "velocity", 0, 2);
                 paraview.add(ph, "pressure", 0, 1);
+                paraview.add(u_exact, "velocity_exact", 0, 2);
                 paraview.add(p_exact, "pressure_exact", 0, 1);
+                paraview.add(u_error, "u_error", 0, 2);
                 paraview.add(p_error, "p_error", 0, 1);
                 paraview.add(fabs(uh_0dx + uh_1dy), "divergence");
                 paraview.writeActiveMesh(active_mesh, path_output_figures + "active_mesh_" + std::to_string(iter) + ".vtk");
