@@ -182,9 +182,9 @@ int main(int argc, char **argv) {
     const int mesh_refinements  = 1;
     
     // Mesh and time step 
-    double h0 = 1./(std::sqrt(2)*2); // initial mesh size
-    double h  = h0/2;
-    double dT = 0.1; //h/h0;
+    double h0 = 1./(std::sqrt(2)); // initial mesh size
+    double h  = h0/64;
+    double dT = 0.01; //h/h0;
     
     const double cfl = um * dT / h; 
 
