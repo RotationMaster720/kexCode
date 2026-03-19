@@ -606,13 +606,13 @@ int main(int argc, char **argv) {
             auto uh_1dy = dy(uh_T.expr(1));
 
     
-            double error_L2_uh  = L2_norm_cut(uh_T, uexact_d, In, q_time, last_quad_pt_time, phi, 0, 2, quadrature_order_space);
-            double error_L2_ph  = L2_norm_cut(ph_T, pexact_d, In, q_time, last_quad_pt_time, phi, 0, 1, quadrature_order_space);
+            double error_L2_uh  = L2_norm_cut(uh_T, uexact_d, In, q_time, last_quad_pt_time, phi, 0, 2);
+            double error_L2_ph  = L2_norm_cut(ph_T, pexact_d, In, q_time, last_quad_pt_time, phi, 0, 1);
             double error_div_uh = maxNormCut(uh_0dx + uh_1dy, active_mesh);
             // double error_H1_uh   = H1normCut(uh, uexact, current_time + dT, 0, 2);  //! TODO
 
-            error_L2L2_uh += L2L2_norm(uh, uexact_d, active_mesh, In, q_time, phi, quadrature_order_space);
-            error_L2L2_ph += L2L2_norm(ph, pexact_d, active_mesh, In, q_time, phi, quadrature_order_space);
+            error_L2L2_uh += L2L2_norm(uh, uexact_d, active_mesh, In, q_time, phi);
+            error_L2L2_ph += L2L2_norm(ph, pexact_d, active_mesh, In, q_time, phi);
             
             // int_ph = integral(active_mesh, ph_T.expr());
             // std::cout << " int_Omega ph = " << int_ph << " int_Omega p = " << int_p << '\n';
