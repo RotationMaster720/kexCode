@@ -190,7 +190,7 @@ int main(int argc, char **argv) {
     
     // Mesh and time step 
     double h0 = 1./(std::sqrt(2)*2); // initial mesh size
-    double h  = h0/64;
+    double h  = h0/128;
     double dT = 0.005; //h/h0;
     
     const double cfl = um * dT / h; 
@@ -458,11 +458,11 @@ int main(int argc, char **argv) {
                 
                 // matches the term int_Omega p dx added in the bilinear form
                 // forces integral of p to be 0
-                navier_stokes.addLinear(
-                    - innerProduct(p_exact.expr(), chi_p)
-                    , active_mesh
-                    , In
-                );
+                // navier_stokes.addLinear(
+                //    - innerProduct(p_exact.expr(), chi_p)
+                //    , active_mesh
+                //    , In
+                //);
                 
                 
                 navier_stokes.addMatMul(data_all); // add matrix*solution to rhs

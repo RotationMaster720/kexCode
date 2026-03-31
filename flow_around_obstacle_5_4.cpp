@@ -35,8 +35,8 @@ namespace ex1 {
 
     const double boundary_penalty   = 35.;
     const double interior_penalty   = 100.;
-    const double ghost_penalty_u    = 1e1;
-    const double ghost_penalty_p    = 1e1;
+    const double ghost_penalty_u    = 1e3;
+    const double ghost_penalty_p    = 1e3;
 
     // Background domain
     double bottom_left_x = 0; // Bottom left corner x coordinate
@@ -183,7 +183,7 @@ int main(int argc, char **argv) {
     
     // Mesh and time step 
     double h0 = 1./(std::sqrt(2)); // initial mesh size
-    double h  = h0/64;
+    double h  = h0/90;
     double dT = 0.01; //h/h0;
     
     const double cfl = um * dT / h; 
@@ -461,11 +461,11 @@ int main(int argc, char **argv) {
                 
                 // matches the term int_Omega p dx added in the bilinear form
                 // forces integral of p to be 0
-                navier_stokes.addLinear(
-                    - innerProduct(p_exact.expr(), chi_p)
-                    , active_mesh
-                    , In
-                );
+                //navier_stokes.addLinear(
+                //    - innerProduct(p_exact.expr(), chi_p)
+                //    , active_mesh
+                //    , In
+                //);
                 
                 
                 navier_stokes.addMatMul(data_all); // add matrix*solution to rhs
@@ -523,12 +523,12 @@ int main(int argc, char **argv) {
                 newton_iterations++;
 
 
-                if (residual_norm < 1e-8) {
+                if (residual_norm < 1e-7) {
                     newton_ok = true;
                     navier_stokes.saveSolution(std::span<double>(data_all));
                     break;
                 }
-                if (newton_iterations >= 7) break;
+                if (newton_iterations >= 9) break;
             }
 
             navier_stokes.cleanBuildInMatrix();
@@ -537,7 +537,7 @@ int main(int argc, char **argv) {
             std::fill(navier_stokes.rhs_.begin(), navier_stokes.rhs_.end(), 0.0);
 
             if (!newton_ok) {
-                std::cout << "Newton's method did not converge in 7 iterations, breaking...\n";
+                std::cout << "Newton's method did not converge in 9 iterations, breaking...\n";
                 break;
             }
 
